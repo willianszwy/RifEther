@@ -68,3 +68,26 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+<Box fill pad='large'>
+        <AppBar>
+          <Heading level='3' margin='none'>RifEther</Heading>
+          <Button icon={<Add />} onClick={() => { }} label='Nova Rifa' />
+        </AppBar>
+        <Box direction='row' flex overflow={{ horizontal: 'hidden' }}>
+          <Box flex  background='light-2' pad='medium'>
+            <List
+              fill='horizontal'
+              primaryKey="name"
+              secondaryKey="percent"
+              data={[
+                { name: 'Alan Turing', percent: 20 },
+                { name: 'Bryan', percent: 30 },
+                { name: 'Chris', percent: 40 },
+                { name: 'Eric', percent: 80 },
+              ]}
+            />
+          </Box>
+        </Box>
+      </Box>
