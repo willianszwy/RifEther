@@ -1,35 +1,66 @@
-import { Form, FormField, TextInput, Button, Box, Select } from "grommet";
+import { Form, FormField, TextInput, Button, Box, Select, Spinner, Heading } from "grommet";
 import React from "react";
+import useContractRifaFactory from "../hooks/useContractRifaFactory";
+import { useWeb3React } from "@web3-react/core";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const NovaRifa = () => {
+    const [loading, setLoading] = useState(false);
+    const constractRifaFactory = useContractRifaFactory();
+    const { account } = useWeb3React();
     const [quantidade, setQuantidade] = React.useState('50');
+    const navigate = useNavigate();
+
+    const handleFormSubmit = (formData, qtd) => {
+        setLoading(true);
+        constractRifaFactory.methods
+            .createRifa(account, formData.nome, formData.premio, formData.valor, qtd)
+            .send({ from: account, value: formData.premio })
+            .then(response => {
+                setLoading(false);
+                navigate('/');
+            });
+    };
+
     return (
-        <Form onSubmit={({ value }) => { }}>
-            <FormField name="nome" htmlFor="nome" label="Nome">
-                <TextInput id="nome" name="nome" placeholder="Nome da Rifa" />
-            </FormField>
-
-            <FormField name="premio" htmlFor="premio" label="Premio">
-                <TextInput id="premio" name="premio" placeholder="Valor do Premio" />
-            </FormField>
-
-            <FormField name="valor" htmlFor="valor" label="Valor">
-                <TextInput id="valor" name="valor" placeholder="Valor do bilhete" />
-            </FormField>
-            <FormField name="quantidade" htmlFor="textinput-id" label="Quantidade">
-            <Select
-               label=""
-                options={['10', '50', '100']}
-                value={quantidade}
-                onChange={({ option }) => setQuantidade(option)}
-            />
-            </FormField>
+        <Box align="center" pad="small">
+             {loading ? (<Box height="small" >
+                <Spinner size="large" />
+            </Box>) : (<></>)}           
             
+            <Heading level={2} margin="none">Criar Rifa</Heading>
+            <Box fill pad="medium">
+                <Form onSubmit={({ value }) => { handleFormSubmit(value, quantidade) }}>
+                    <FormField name="nome" htmlFor="nome" label="Nome">
+                        <TextInput id="nome" name="nome" placeholder="Nome da Rifa" />
+                    </FormField>
 
-            <Box flex justify="end" direction="row" gap="medium">
-                <Button type="submit" primary label="Criar" />
+                    <FormField name="premio" htmlFor="premio" label="Premio">
+                        <TextInput id="premio" name="premio" placeholder="Valor do Premio" />
+                    </FormField>
+
+                    <FormField name="valor" htmlFor="valor" label="Valor">
+                        <TextInput id="valor" name="valor" placeholder="Valor do bilhete" />
+                    </FormField>
+                    <FormField name="quantidade" htmlFor="textinput-id" label="Quantidade">
+                        <Select
+                            label=""
+                            options={['5','10','15','20','25', '50', '100']}
+                            value={quantidade}
+                            onChange={({ option }) => setQuantidade(option)}
+                        />
+                    </FormField>
+
+
+                    <Box flex justify="end" direction="row" gap="medium">
+                        <Button type="submit" primary label="Criar" />
+                    </Box>
+                </Form>
+
             </Box>
-        </Form>
+
+        </Box>
     )
 };
 

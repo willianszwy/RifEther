@@ -14,12 +14,14 @@ const Rifa = () => {
     const params = useParams();
     const [rifa, setRifa] = useState({});
     const [data, setData] = useState([]);
-    const [sortear, setSortear] = useState(false);
+    const [finalizar, setFinalizar] = useState(false);
+    const [criador, setCriador] = useState('');
     const [reload, setReload] = useState(false);
     const [ganhador, setGanhador] = useState('');
     const contractRifa = useContractRifa(params['id']);
     const { account } = useWeb3React();
 
+   
     const getRifa = useCallback(async () => {
         if (contractRifa) {
             const nome = await contractRifa.methods.nome().call();
@@ -28,11 +30,13 @@ const Rifa = () => {
             const bilhetes = await contractRifa.methods.getBilhetes().call();
             const numerosRestantes = await contractRifa.methods.bilhetesRestantes().call();
 
+            setCriador(await contractRifa.methods.criador().call());
+
             setGanhador(await contractRifa.methods.vencedor().call());
 
             setRifa({ nome, premio, valor });
 
-            setSortear(+numerosRestantes === 0);
+            setFinalizar(+numerosRestantes === 0);
 
             let temp = [];
             bilhetes.forEach((value, index) => {
@@ -89,14 +93,21 @@ const Rifa = () => {
 
     return (
         <Box fill>
-            {sortear ? (
+            {finalizar ? (
                 <Box flex direction="row-responsive" align="center" justify="center">
-                    {ganhador === '0x0000000000000000000000000000000000000000' ?
-                        (<Button label="Sortear" onClick={() => realizarSorteio()} size="large" icon={<Achievement />} />) : (<Box>
+                    {ganhador === '0x0000000000000000000000000000000000000000' && account === criador ?
+                        (<Button label="Sortear" onClick={() => realizarSorteio()} size="large" icon={<Achievement />} />) 
+                      : (<Box>
                             <Heading level={3} margin="none" >Ganhador</Heading>
-                            <Text color='brand'>{account}</Text>
+                            {ganhador === '0x0000000000000000000000000000000000000000' ? (
+                                <Text color='brand'>Sorteio ainda não realizado</Text>
+                            ): (
+                                <Text color='brand'>{ganhador}</Text>
+                            )}
+                            
                         </Box>)}
-                </Box>) : (<></>)}
+                </Box>) 
+                : (<></>)}
 
             <Box pad='small'>
                 <Box flex direction="row-responsive" align="baseline" justify="between">

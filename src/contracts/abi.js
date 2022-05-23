@@ -1,4 +1,4 @@
-export const rifa_factory_address = '0x91D556e3E09f295F58B4565213F920F48a9FBc42';
+export const rifa_factory_address = '0x27DD6d20022258008b41F9077462A57f9Ac0642b';
 export const abi_rifa_factory = [
 	{
 		"inputs": [
