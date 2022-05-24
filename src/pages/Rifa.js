@@ -6,9 +6,6 @@ import useContractRifa from "../hooks/useContractRifa";
 import { useWeb3React } from "@web3-react/core";
 import { Achievement } from 'grommet-icons';
 
-
-const rifa = { nome: "Rifa Bicicleta BarraForte", valor: "0,0001", quantidade: 50, premio: 0.334 }
-
 const Rifa = () => {
 
     const params = useParams();
@@ -18,6 +15,7 @@ const Rifa = () => {
     const [criador, setCriador] = useState('');
     const [reload, setReload] = useState(false);
     const [ganhador, setGanhador] = useState('');
+    const [numeroSorteado, setNumeroSorteado] = useState(null);
     const contractRifa = useContractRifa(params['id']);
     const { account } = useWeb3React();
 
@@ -33,6 +31,7 @@ const Rifa = () => {
             setCriador(await contractRifa.methods.criador().call());
 
             setGanhador(await contractRifa.methods.vencedor().call());
+            setNumeroSorteado(await contractRifa.methods.numero_sorteado().call());
 
             setRifa({ nome, premio, valor });
 
@@ -97,13 +96,16 @@ const Rifa = () => {
                 <Box flex direction="row-responsive" align="center" justify="center">
                     {ganhador === '0x0000000000000000000000000000000000000000' && account === criador ?
                         (<Button label="Sortear" onClick={() => realizarSorteio()} size="large" icon={<Achievement />} />) 
-                      : (<Box>
-                            <Heading level={3} margin="none" >Ganhador</Heading>
+                      : (<Box background="light-6" pad="medium" round="small" overflow="hidden">
+                            <Heading textAlign="center" level={2}  color="accent-2" >Ganhador</Heading> 
+                            <Text size="20px" weight="bold" color="brand">
                             {ganhador === '0x0000000000000000000000000000000000000000' ? (
-                                <Text color='brand'>Sorteio ainda não realizado</Text>
+                                " Sorteio ainda não realizado"
                             ): (
-                                <Text color='brand'>{ganhador}</Text>
+                                ` ${numeroSorteado} - ${ganhador}`
                             )}
+                            </Text>
+                            
                             
                         </Box>)}
                 </Box>) 
@@ -112,12 +114,12 @@ const Rifa = () => {
             <Box pad='small'>
                 <Box flex direction="row-responsive" align="baseline" justify="between">
                     <Heading level={2} >{rifa.nome}</Heading>
-                    <Text size="50px" weight="bold" color="brand">
-                        Prêmio: {rifa.premio}
+                    <Text size="40px" weight="bold" color="brand">
+                        Prêmio: {rifa.premio} wei
                     </Text>
                 </Box>
                 <Text size="xlarge" weight="bold" textAlign="end">
-                    Valor: {rifa.valor}
+                    Preço: {rifa.valor} wei
                 </Text>
             </Box>
             <Box>
@@ -125,7 +127,7 @@ const Rifa = () => {
                     Números
                 </Text>
                 <Box margin={{ top: 'medium' }}>
-                    <GridRifa data={data} comprar={(index) => comprar(index)}></GridRifa>
+                    <GridRifa data={data} ganhador={+numeroSorteado} sorteado={ganhador !== '0x0000000000000000000000000000000000000000'} comprar={(index) => comprar(index)}></GridRifa>
                 </Box>
             </Box>
         </Box>

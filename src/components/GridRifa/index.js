@@ -11,7 +11,7 @@ const GridRifa = (props) => {
                     <Box round='full'
                         height='xsmall'
                         width="xsmall"
-                        background={item.status ? 'brand' : 'status-disabled'}
+                        background={item.status ? 'brand' : props.ganhador === index && props.sorteado? 'accent-4' : 'status-disabled'}
                         margin='xsmall'
                         align='center'
                         justify="center"

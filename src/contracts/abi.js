@@ -1,4 +1,4 @@
-export const rifa_factory_address = '0x27DD6d20022258008b41F9077462A57f9Ac0642b';
+export const rifa_factory_address = '0xc84ce7d51F588207b5FDcB869810C287943b0922';
 export const abi_rifa_factory = [
 	{
 		"inputs": [
@@ -224,6 +224,19 @@ export const abi_rifa = [
 				"internalType": "string",
 				"name": "",
 				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "numero_sorteado",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",

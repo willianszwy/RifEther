@@ -48,6 +48,7 @@ contract Rifa {
     uint public quantidade;
 
     address public vencedor;
+    uint public numero_sorteado;
     
     address[] public bilhetes;
 
@@ -85,17 +86,12 @@ contract Rifa {
         
         RandomNumbers random = new RandomNumbers();
 
-        uint randomNum = random.random(bilhetes.length);
+        numero_sorteado = random.random(bilhetes.length);
 
-        vencedor = bilhetes[randomNum];
+        vencedor = bilhetes[numero_sorteado];
 
         (bool success, ) = (vencedor).call{value: premio}(""); 
         require(success, "Falha ao transferir dinheiro do premio");
-
-        (bool success2, ) = (criador).call{value: address(this).balance}(""); 
-        require(success2, "Falha ao transferir dinheiro do criador");
-
-        delete bilhetes;
 
     }
 
